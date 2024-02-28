@@ -1,0 +1,30 @@
+version: '3'
+name: my_food_delivery
+services:
+  php:
+    build:
+      context: ./php
+      dockerfile: ./Dockerfile
+      args:
+        TIMEZONE: ${TIMEZONE}
+    environment:
+      APP_ENV: dev
+      XDEBUG_CLIENT_HOST: host.docker.internal
+      XDEBUG_CLIENT_PORT: 9000
+      PHP_IDE_CONFIG: serverName=localhost
+    volumes:
+      - ../:/var/www/
+    networks:
+      - my-network
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: ./Dockerfile
+    volumes:
+      - ../:/var/www/
+    ports:
+      - '8000:80'
+    networks:
+      - my-network
+networks:
+  my-network:
