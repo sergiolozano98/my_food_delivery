@@ -4,6 +4,9 @@ namespace Order\Application\Create;
 
 use App\Order\Application\Create\CreateOrderCommand;
 use App\Order\Application\Create\CreateOrderCommandHandler;
+use App\Order\Domain\Calculator\CalculateAmount;
+use App\Order\Domain\Calculator\Operations\DeliveryOrder;
+use App\Order\Domain\Calculator\Operations\NormalOrder;
 use App\Order\Domain\DrinkValueException;
 use App\Order\Domain\PaymentDeliveryException;
 use App\Order\Domain\PaymentException;
@@ -20,7 +23,8 @@ class CreateOrderTest extends TestCase
     {
         $this->productFactory = $this->createMock(ProductFactory::class);
 
-        $this->handler = new CreateOrderCommandHandler($this->productFactory);
+        $this->calculator = new CalculateAmount([new DeliveryOrder(), new NormalOrder()]);
+        $this->handler = new CreateOrderCommandHandler($this->productFactory, $this->calculator);
     }
 
     #[Test]
