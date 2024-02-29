@@ -2,22 +2,23 @@
 
 namespace App\Order\Domain;
 
+use App\Order\Domain\Product\Product;
+
 class Order
 {
 
     public function __construct(
-        protected ProductType $product,
-        protected Money       $money,
-        protected Delivery    $isDelivery,
-        protected float       $amount,
-        protected ?Drink      $drinks,
+        protected Product  $product,
+        protected Money    $money,
+        protected Delivery $isDelivery,
+        protected ?Drink   $drinks,
     )
     {
     }
 
-    public static function create(ProductType $product, Money $money, Delivery $isDelivery, float $amount, ?Drink $drinks): Order
+    public static function create(Product $product, Money $money, Delivery $isDelivery, ?Drink $drinks): Order
     {
-        return new self($product, $money, $isDelivery, $amount, $drinks);
+        return new self($product, $money, $isDelivery, $drinks);
     }
 
     public function isDelivery(): bool
@@ -38,9 +39,9 @@ class Order
     public function calculateTotalOrderAmount(): float
     {
         if ($this->isDelivery()) {
-            return $this->amount + ($this->drinks->value() * 2) + 1.5;
+            return $this->product->getPrice() + ($this->drinks->value() * 2) + 1.5;
         } else {
-            return $this->amount + ($this->drinks->value() * 2);
+            return $this->product->getPrice() + ($this->drinks->value() * 2);
         }
     }
 
