@@ -3,6 +3,8 @@
 namespace App\Tests\Command;
 
 use App\Command\OrderCommand;
+use App\Order\Domain\Factory\ProductFactory;
+use App\Order\Domain\Product\Pizza;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -10,16 +12,23 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class OrderCommandTest extends KernelTestCase
 {
+    private ProductFactory $factory;
+
     protected function setUp(): void
     {
         self::bootKernel();
+        $this->factory = $this->createMock(ProductFactory::class);
     }
 
     #[Test]
     public function it_should_message_correct_when_order_is_success()
     {
         $application = new Application(self::$kernel);
-        $application->add(new OrderCommand());
+        $this->factory
+            ->method('createProduct')
+            ->willReturn(new Pizza());
+
+        $application->add(new OrderCommand($this->factory));
 
         $command = $application->find('app:order:register');
         $commandTester = new CommandTester($command);
@@ -40,7 +49,11 @@ class OrderCommandTest extends KernelTestCase
     public function it_should_error_message_when_money_is_not_exactly_is_delivery()
     {
         $application = new Application(self::$kernel);
-        $application->add(new OrderCommand());
+        $this->factory
+            ->method('createProduct')
+            ->willReturn(new Pizza());
+
+        $application->add(new OrderCommand($this->factory));
 
         $command = $application->find('app:order:register');
         $commandTester = new CommandTester($command);
@@ -61,7 +74,11 @@ class OrderCommandTest extends KernelTestCase
     public function it_should_error_message_when_money_is_not_exactly()
     {
         $application = new Application(self::$kernel);
-        $application->add(new OrderCommand());
+        $this->factory
+            ->method('createProduct')
+            ->willReturn(new Pizza());
+
+        $application->add(new OrderCommand($this->factory));
 
         $command = $application->find('app:order:register');
         $commandTester = new CommandTester($command);
@@ -82,7 +99,11 @@ class OrderCommandTest extends KernelTestCase
     public function it_should_error_message_when_drink_number_is_not_between_0_2()
     {
         $application = new Application(self::$kernel);
-        $application->add(new OrderCommand());
+        $this->factory
+            ->method('createProduct')
+            ->willReturn(new Pizza());
+
+        $application->add(new OrderCommand($this->factory));
 
         $command = $application->find('app:order:register');
         $commandTester = new CommandTester($command);
@@ -104,7 +125,11 @@ class OrderCommandTest extends KernelTestCase
     public function it_should_message_when_included_drink_in_order()
     {
         $application = new Application(self::$kernel);
-        $application->add(new OrderCommand());
+        $this->factory
+            ->method('createProduct')
+            ->willReturn(new Pizza());
+
+        $application->add(new OrderCommand($this->factory));
 
         $command = $application->find('app:order:register');
         $commandTester = new CommandTester($command);

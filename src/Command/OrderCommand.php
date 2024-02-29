@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Order\Application\Create\CreateOrderCommand;
 use App\Order\Application\Create\CreateOrderCommandHandler;
+use App\Order\Domain\Factory\ProductFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -18,6 +19,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class OrderCommand extends Command
 {
+
+    public function __construct(private readonly ProductFactory $factory)
+    {
+        parent::__construct('app:order:register');
+    }
+
     protected function configure(): void
     {
         $this->setHelp('Registers a new order in the system');
@@ -37,7 +44,7 @@ class OrderCommand extends Command
         $drinks = $input->getArgument('drinks');
 
         try {
-            $result = (new CreateOrderCommandHandler())->__invoke(new CreateOrderCommand($productType, $money, $delivery, $drinks));
+            $result = (new CreateOrderCommandHandler($this->factory))->__invoke(new CreateOrderCommand($productType, $money, $delivery, $drinks));
         } catch (\Exception $exception) {
             $output->writeln($exception->getMessage());
             return Command::FAILURE;

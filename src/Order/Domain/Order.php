@@ -36,12 +36,12 @@ class Order
         return $this->drinks->value();
     }
 
-    public function calculateTotalOrderAmount(): float
+    protected function calculateTotalOrderAmount(): float
     {
         if ($this->isDelivery()) {
-            return $this->product->getPrice() + ($this->drinks->value() * 2) + 1.5;
+            return $this->product->price() + ($this->drinks->value() * 2) + 1.5;
         } else {
-            return $this->product->getPrice() + ($this->drinks->value() * 2);
+            return $this->product->price() + ($this->drinks->value() * 2);
         }
     }
 

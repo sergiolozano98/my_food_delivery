@@ -7,12 +7,12 @@ abstract class Product
     protected string $type;
     protected float $price;
 
-    public function getType(): string
+    public function type(): string
     {
         return $this->type;
     }
 
-    public function getPrice(): float
+    public function price(): float
     {
         return $this->price;
     }
