@@ -2,11 +2,11 @@
 
 namespace App\Order\Application\Create;
 
-class CreateOrderCommand
+readonly class CreateOrderCommand
 {
     public function __construct(
         private string $productType,
-        private int $money,
+        private float  $money,
         private bool   $delivery,
         private int    $drink
     )
@@ -18,7 +18,7 @@ class CreateOrderCommand
         return $this->productType;
     }
 
-    public function money(): string
+    public function money(): float
     {
         return $this->money;
     }

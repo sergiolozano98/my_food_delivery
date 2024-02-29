@@ -2,50 +2,48 @@
 
 namespace App\Order\Application\Create;
 
+use App\Order\Domain\Delivery;
+use App\Order\Domain\Drink;
+use App\Order\Domain\DrinkValueException;
+use App\Order\Domain\Money;
+use App\Order\Domain\Order;
+use App\Order\Domain\ProductType;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 class CreateOrderCommandHandler
 {
+    /**
+     * @throws DrinkValueException
+     * @throws \Exception
+     */
     public function __invoke(CreateOrderCommand $command): string
     {
-        /*Order::create($command->productType(), $command->drink()->value(), $command->money()->value(), $command->delivery());*/
+        $foodAmount = 0;
 
-        if ($command->productType() == 'pizza' || $command->productType() == 'burger' || $command->productType() == 'sushi') {
-            $foodAmount = 0;
-
-            if ($command->productType() == 'pizza') {
-                $foodAmount = 12.5;
-            } elseif ($command->productType() == 'burger') {
-                $foodAmount = 9;
-            } elseif ($command->productType() == 'sushi') {
-                $foodAmount = 24;
-            }
-
-            if ($command->drinks() < 0 || $command->drinks() > 2) {
-                throw new Exception('Number of drinks should be between 0 and 2.');
-            } else {
-                if ($command->delivery() == true) {
-                    $totalOrderAmount = $foodAmount + ($command->drinks() * 2) + 1.5;
-                    if ($command->money() < $totalOrderAmount || $command->money() > $totalOrderAmount) {
-                        throw new Exception('Money must be the exact order amount on delivery orders.');
-                    }
-                } else {
-                    $totalOrderAmount = $foodAmount + ($command->drinks() * 2);
-                    if ($command->money() < $totalOrderAmount) {
-                        throw new Exception('Money does not reach the order amount.');
-                    }
-                }
-
-                if ($command->drinks() > 0) {
-                    $drinksIncludedString = 'with drinks included ';
-                } else {
-                    $drinksIncludedString = '';
-                }
-
-                return 'Your order ' . $drinksIncludedString . 'has been registered.';
-            }
-        } else {
-            throw new Exception('Selected food must be pizza, burger or sushi.');
+        if ($command->productType() == 'pizza') {
+            $foodAmount = 12.5;
+        } elseif ($command->productType() == 'burger') {
+            $foodAmount = 9;
+        } elseif ($command->productType() == 'sushi') {
+            $foodAmount = 24;
         }
+
+        $order = Order::create(
+            ProductType::create($command->productType()),
+            Money::create($command->money()),
+            Delivery::create($command->delivery()),
+            $foodAmount,
+            Drink::create($command->drinks())
+        );
+
+        if ($order->validateMoney()) {
+            $message = $order->isDelivery()
+                ? 'Money must be the exact order amount on delivery orders.'
+                : 'Money does not reach the order amount.';
+
+            throw new \Exception($message);
+        }
+
+        return sprintf('Your order%s has been registered.', ($order->drinks() > 0) ? ' with drinks included' : '');
     }
 }
