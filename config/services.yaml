@@ -11,6 +11,9 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+    _instanceof:
+        App\Shared\Domain\Bus\Command\CommandHandler:
+            tags: [ 'app.command_handler' ]
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -20,9 +23,13 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\Order\Domain\Factory\ProductFactory:
+    App\Order\Domain\Product\Factory\ProductFactory:
         arguments:
             $products:
                 - '@App\Order\Domain\Product\Pizza'
                 - '@App\Order\Domain\Product\Burger'
                 - '@App\Order\Domain\Product\Sushi'
+
+    ### Buses
+    App\Shared\Infrastructure\Bus\Command\InMemoryCommandBus:
+        arguments: [ !tagged app.command_handler ]

@@ -2,13 +2,15 @@
 
 namespace App\Order\Application\Create;
 
-readonly class CreateOrderCommand
+use App\Shared\Domain\Bus\Command\Command;
+
+readonly class CreateOrderCommand implements Command
 {
     public function __construct(
         private string $productType,
         private float  $money,
         private bool   $delivery,
-        private int    $drink
+        private ?int    $drink
     )
     {
     }
@@ -28,7 +30,7 @@ readonly class CreateOrderCommand
         return $this->delivery;
     }
 
-    public function drinks(): int
+    public function drinks(): ?int
     {
         return $this->drink;
     }

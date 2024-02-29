@@ -4,33 +4,56 @@ namespace App\Order\Application\Create;
 
 use App\Order\Domain\Delivery;
 use App\Order\Domain\Drink;
-use App\Order\Domain\Factory\ProductFactory;
 use App\Order\Domain\Money;
 use App\Order\Domain\Order;
+use App\Order\Domain\PaymentDeliveryException;
+use App\Order\Domain\PaymentException;
+use App\Order\Domain\Product\Factory\ProductFactory;
+use App\Order\Domain\Product\Product;
+use App\Shared\Domain\Bus\Command\CommandHandler;
 
-readonly class CreateOrderCommandHandler
+readonly class CreateOrderCommandHandler implements CommandHandler
 {
     public function __construct(private ProductFactory $factory)
     {
     }
 
-    public function __invoke(CreateOrderCommand $command): string
+    public function __invoke(CreateOrderCommand $command): void
     {
+        $product = $this->factory->createProduct($command->productType());
+        $drink = Drink::create($command->drinks());
+        $money = Money::create($command->money());
+        $delivery = Delivery::create($command->delivery());
+        $amount = $this->calculateAmount($product, $drink, $delivery);
+
+        $this->isValidPayment($money, $delivery, $amount);
+
         $order = Order::create(
-            $this->factory->createProduct($command->productType()),
-            Money::create($command->money()),
-            Delivery::create($command->delivery()),
-            Drink::create($command->drinks())
+            $product,
+            $money,
+            $delivery,
+            $drink
         );
+    }
 
-        if ($order->validateMoney()) {
-            $message = $order->isDelivery()
-                ? 'Money must be the exact order amount on delivery orders.'
-                : 'Money does not reach the order amount.';
-
-            throw new \Exception($message);
+    private function isValidPayment(Money $money, Delivery $delivery, float $amount): void
+    {
+        if ($delivery->value() && ($money->value() < $amount || $money->value() > $amount)) {
+            throw new PaymentDeliveryException();
         }
 
-        return sprintf('Your order%s has been registered.', ($order->drinks() > 0) ? ' with drinks included' : '');
+        if (!$delivery->value() && ($money->value() < $amount)) {
+            throw new PaymentException();
+        }
+    }
+
+    private function calculateAmount(Product $product, Drink $drink, Delivery $delivery): int|float
+    {
+        $amount = $product->price() + ($drink->value() * 2);
+
+        if ($delivery->value()) {
+            $amount = $amount + 1.5;
+        }
+        return $amount;
     }
 }

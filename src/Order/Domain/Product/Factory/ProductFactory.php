@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Order\Domain\Factory;
+namespace App\Order\Domain\Product\Factory;
 
 use App\Order\Domain\Product\Product;
 use App\Order\Domain\ProductTypeException;

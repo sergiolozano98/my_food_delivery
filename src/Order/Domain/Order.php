@@ -35,24 +35,4 @@ class Order
     {
         return $this->drinks->value();
     }
-
-    protected function calculateTotalOrderAmount(): float
-    {
-        if ($this->isDelivery()) {
-            return $this->product->price() + ($this->drinks->value() * 2) + 1.5;
-        } else {
-            return $this->product->price() + ($this->drinks->value() * 2);
-        }
-    }
-
-    public function validateMoney(): bool
-    {
-        $amount = $this->calculateTotalOrderAmount();
-
-        if ($this->isDelivery()) {
-            return $this->money() < $amount || $this->money() > $amount;
-        }
-
-        return $this->money() < $amount;
-    }
 }

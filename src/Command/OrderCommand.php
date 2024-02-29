@@ -3,8 +3,7 @@
 namespace App\Command;
 
 use App\Order\Application\Create\CreateOrderCommand;
-use App\Order\Application\Create\CreateOrderCommandHandler;
-use App\Order\Domain\Factory\ProductFactory;
+use App\Shared\Domain\Bus\Command\CommandBus;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class OrderCommand extends Command
 {
 
-    public function __construct(private readonly ProductFactory $factory)
+    public function __construct(private readonly CommandBus $commandBus)
     {
         parent::__construct('app:order:register');
     }
@@ -44,13 +43,13 @@ class OrderCommand extends Command
         $drinks = $input->getArgument('drinks');
 
         try {
-            $result = (new CreateOrderCommandHandler($this->factory))->__invoke(new CreateOrderCommand($productType, $money, $delivery, $drinks));
+            $this->commandBus->dispatch(new CreateOrderCommand($productType, $money, $delivery, $drinks));
         } catch (\Exception $exception) {
             $output->writeln($exception->getMessage());
             return Command::FAILURE;
         }
 
-        $output->writeln($result);
+        $output->writeln(sprintf('Your order%s has been registered.', ($drinks > 0) ? ' with drinks included' : ''));
         return Command::SUCCESS;
     }
 }
