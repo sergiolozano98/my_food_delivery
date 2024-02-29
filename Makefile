@@ -38,4 +38,4 @@ cache-clear:
 	docker compose -f docker/docker-compose.yml exec php php bin/console cache:clear
 
 run-command:
-	docker compose -f docker/docker-compose.yml exec php php bin/console app:order:register
+	docker compose -f docker/docker-compose.yml exec php php bin/console app:order:register $(food) $(money) $(isDelivery) $(drinks)
