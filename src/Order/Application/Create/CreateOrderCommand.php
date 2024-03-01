@@ -7,6 +7,7 @@ use App\Shared\Domain\Bus\Command\Command;
 readonly class CreateOrderCommand implements Command
 {
     public function __construct(
+        private string $id,
         private string $foodType,
         private float  $money,
         private bool   $delivery,
@@ -14,7 +15,10 @@ readonly class CreateOrderCommand implements Command
     )
     {
     }
-
+    public function id(): string
+    {
+        return $this->id;
+    }
     public function foodType(): string
     {
         return $this->foodType;

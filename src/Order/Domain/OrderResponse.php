@@ -5,15 +5,17 @@ namespace App\Order\Domain;
 readonly class OrderResponse
 {
     public function __construct(
-        private int    $id,
+        private string $id,
         private int    $foodId,
-        private ?int $drink,
+        private ?int   $drink,
         private bool   $delivery,
         private float  $money,
         private float  $amount
-    ) {}
+    )
+    {
+    }
 
-    public function id(): int
+    public function id(): string
     {
         return $this->id;
     }

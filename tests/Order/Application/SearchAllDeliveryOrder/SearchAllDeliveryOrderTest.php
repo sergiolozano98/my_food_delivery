@@ -12,9 +12,11 @@ use App\Order\Domain\Drink;
 use App\Order\Domain\Food\FoodId;
 use App\Order\Domain\Money;
 use App\Order\Domain\Order;
+use App\Order\Domain\OrderId;
 use App\Order\Domain\OrderRepository;
 use App\Order\Domain\OrderResponse;
 use App\Order\Domain\OrdersResponse;
+use App\Shared\Domain\ValueObject\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -33,12 +35,12 @@ class SearchAllDeliveryOrderTest extends TestCase
     #[Test]
     public function it_should_message_correct_when_order_is_success()
     {
-
+        $uuid = Uuid::random();
         $this->repository
             ->expects($this->once())
             ->method('allDeliveryOrder')
             ->willReturn([new Order(
-                1,
+                new OrderId($uuid->value()),
                 FoodId::create(1),
                 Money::create(14),
                 Delivery::create(true),
@@ -49,7 +51,7 @@ class SearchAllDeliveryOrderTest extends TestCase
         $command = new GetAllDeliveryOrderQuery();
 
         $result = $this->executeHandler($command);
-        $expect = new OrdersResponse(new OrderResponse(1, 1, null, true, 14, 14));
+        $expect = new OrdersResponse(new OrderResponse($uuid->value(), 1, null, true, 14, 14));
 
         $this->assertEquals($expect, $result);
     }

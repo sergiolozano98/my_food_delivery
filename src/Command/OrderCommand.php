@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Order\Application\Create\CreateOrderCommand;
 use App\Shared\Domain\Bus\Command\CommandBus;
+use App\Shared\Domain\ValueObject\Uuid;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -41,9 +42,10 @@ class OrderCommand extends Command
         $money = $input->getArgument('money');
         $delivery = $input->getArgument('isDelivery');
         $drinks = $input->getArgument('drinks');
+        $orderId = Uuid::random()->value();
 
         try {
-            $this->commandBus->dispatch(new CreateOrderCommand($foodType, $money, $delivery, $drinks));
+            $this->commandBus->dispatch(new CreateOrderCommand($orderId, $foodType, $money, $delivery, $drinks));
         } catch (\Exception $exception) {
             $output->writeln($exception->getMessage());
             return Command::FAILURE;

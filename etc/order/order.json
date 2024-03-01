@@ -1,46 +1,6 @@
 [
     {
-        "id": 1,
-        "food": 1,
-        "drink": 0,
-        "delivery": true,
-        "money": 12.5,
-        "amount": 12.5
-    },
-    {
-        "id": 2,
-        "food": 1,
-        "drink": 0,
-        "delivery": false,
-        "money": 12.5,
-        "amount": 12.5
-    },
-    {
-        "id": 66,
-        "food": 1,
-        "drink": 0,
-        "delivery": true,
-        "money": 12.5,
-        "amount": 12.5
-    },
-    {
-        "id": 28,
-        "food": 1,
-        "drink": 0,
-        "delivery": false,
-        "money": 12.5,
-        "amount": 12.5
-    },
-    {
-        "id": 60,
-        "food": 1,
-        "drink": 0,
-        "delivery": true,
-        "money": 14,
-        "amount": 14
-    },
-    {
-        "id": 98,
+        "id": "4de221da-dbea-458c-a125-e4e2cab7accb",
         "food": 2,
         "drink": 0,
         "delivery": true,

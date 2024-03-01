@@ -13,6 +13,7 @@ use App\Order\Domain\PaymentDeliveryException;
 use App\Order\Domain\PaymentException;
 use App\Order\Domain\Food\Factory\FoodFactory;
 use App\Order\Domain\Food\Pizza;
+use App\Shared\Domain\ValueObject\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -41,7 +42,7 @@ class CreateOrderTest extends TestCase
             ->expects($this->once())
             ->method('save');
 
-        $command = new CreateOrderCommand('pizza', 14, true, null);
+        $command = new CreateOrderCommand(Uuid::random(), 'pizza', 14, true, null);
 
         $this->executeHandler($command);
     }
@@ -60,7 +61,7 @@ class CreateOrderTest extends TestCase
             ->expects($this->never())
             ->method('save');
 
-        $command = new CreateOrderCommand('pizza', 10, true, null);
+        $command = new CreateOrderCommand(Uuid::random(), 'pizza', 10, true, null);
 
         $this->executeHandler($command);
     }
@@ -79,7 +80,7 @@ class CreateOrderTest extends TestCase
             ->expects($this->never())
             ->method('save');
 
-        $command = new CreateOrderCommand('pizza', 10, false, null);
+        $command = new CreateOrderCommand(Uuid::random(), 'pizza', 10, false, null);
 
         $this->executeHandler($command);
     }
@@ -98,7 +99,7 @@ class CreateOrderTest extends TestCase
             ->expects($this->never())
             ->method('save');
 
-        $command = new CreateOrderCommand('pizza', 10, true, 99);
+        $command = new CreateOrderCommand(Uuid::random(), 'pizza', 10, true, 99);
 
         $this->executeHandler($command);
     }
@@ -115,7 +116,7 @@ class CreateOrderTest extends TestCase
             ->expects($this->once())
             ->method('save');
 
-        $command = new CreateOrderCommand('pizza', 16, true, 1);
+        $command = new CreateOrderCommand(Uuid::random(), 'pizza', 16, true, 1);
 
         $this->executeHandler($command);
     }

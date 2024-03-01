@@ -8,7 +8,7 @@ class Order
 {
 
     public function __construct(
-        protected int      $id,
+        protected OrderId  $id,
         protected FoodId   $foodId,
         protected Money    $money,
         protected Delivery $isDelivery,
@@ -18,7 +18,7 @@ class Order
     {
     }
 
-    public static function create(int $id, FoodId $foodId, Money $money, Delivery $isDelivery, Amount $amount, ?Drink $drinks): Order
+    public static function create(OrderId $id, FoodId $foodId, Money $money, Delivery $isDelivery, Amount $amount, ?Drink $drinks): Order
     {
         return new self($id, $foodId, $money, $isDelivery, $amount, $drinks);
     }
@@ -26,7 +26,7 @@ class Order
     public static function fromArray(array $data): Order
     {
         return new self(
-            $data['id'],
+            new OrderId($data['id']),
             new FoodId($data['food']),
             new Money($data['money']),
             new Delivery($data['delivery']),
@@ -35,9 +35,9 @@ class Order
         );
     }
 
-    public function id(): int
+    public function id(): string
     {
-        return $this->id;
+        return $this->id->value();
     }
 
     public function isDelivery(): bool

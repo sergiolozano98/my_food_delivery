@@ -8,6 +8,7 @@ use App\Order\Domain\Delivery;
 use App\Order\Domain\Drink;
 use App\Order\Domain\Money;
 use App\Order\Domain\Order;
+use App\Order\Domain\OrderId;
 use App\Order\Domain\OrderRepository;
 use App\Order\Domain\PaymentDeliveryException;
 use App\Order\Domain\PaymentException;
@@ -36,7 +37,7 @@ readonly class CreateOrderCommandHandler implements CommandHandler
         $this->isValidPayment($money, $delivery, $amount);
 
         $order = Order::create(
-            random_int(0, 100),
+            new OrderId($command->id()),
             FoodId::create($food->id()),
             $money,
             $delivery,

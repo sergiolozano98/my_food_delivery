@@ -6,7 +6,7 @@ services:
       context: ./php
       dockerfile: ./Dockerfile
       args:
-        TIMEZONE: ${TIMEZONE}
+        TIMEZONE: 'Europe/Madrid'
     environment:
       APP_ENV: dev
       XDEBUG_CLIENT_HOST: host.docker.internal
