@@ -2,23 +2,42 @@
 
 namespace App\Order\Domain;
 
-use App\Order\Domain\Product\Product;
+use App\Order\Domain\Product\ProductId;
 
 class Order
 {
 
     public function __construct(
-        protected Product  $product,
-        protected Money    $money,
-        protected Delivery $isDelivery,
-        protected ?Drink   $drinks,
+        protected int       $id,
+        protected ProductId $product,
+        protected Money     $money,
+        protected Delivery  $isDelivery,
+        protected Amount    $amount,
+        protected ?Drink    $drinks,
     )
     {
     }
 
-    public static function create(Product $product, Money $money, Delivery $isDelivery, ?Drink $drinks): Order
+    public static function create(int $id, ProductId $product, Money $money, Delivery $isDelivery, Amount $amount, ?Drink $drinks): Order
     {
-        return new self($product, $money, $isDelivery, $drinks);
+        return new self($id, $product, $money, $isDelivery, $amount, $drinks);
+    }
+
+    public static function fromArray(array $data): Order
+    {
+        return new self(
+            $data['id'],
+            new ProductId($data['food']),
+            new Money($data['money']),
+            new Delivery($data['delivery']),
+            new Amount($data['amount']),
+            new Drink($data['drink'])
+        );
+    }
+
+    public function id(): int
+    {
+        return $this->id;
     }
 
     public function isDelivery(): bool
@@ -34,5 +53,15 @@ class Order
     public function drinks(): ?int
     {
         return $this->drinks->value();
+    }
+
+    public function productId(): int
+    {
+        return $this->product->value();
+    }
+
+    public function amount(): float
+    {
+        return $this->amount->value();
     }
 }

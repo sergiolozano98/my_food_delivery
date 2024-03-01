@@ -6,7 +6,7 @@ use App\Order\Domain\Delivery;
 use App\Order\Domain\Drink;
 use App\Order\Domain\Product\Product;
 
-class NormalOrder
+class NormalOrder implements Operation
 {
     public function execute(Product $product, Drink $drink): float
     {

@@ -15,7 +15,7 @@ class CalculateAmount
 
     public function calculateAmount(Product $product, Drink $drink, Delivery $delivery): float
     {
-        /** @var \App\Order\Domain\Calculator\Operations\Operation $operation */
+        /** @var Operation $operation */
         foreach ($this->operations as $operation) {
             if ($operation->support($delivery)) {
                 return $operation->execute($product, $drink);

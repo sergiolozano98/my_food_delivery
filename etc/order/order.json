@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "food": 1,
+        "drink": 0,
+        "delivery": true,
+        "money": 12.5,
+        "amount": 12.5
+    },
+    {
+        "id": 2,
+        "food": 1,
+        "drink": 0,
+        "delivery": false,
+        "money": 12.5,
+        "amount": 12.5
+    },
+    {
+        "id": 66,
+        "food": 1,
+        "drink": 0,
+        "delivery": true,
+        "money": 12.5,
+        "amount": 12.5
+    }
+]

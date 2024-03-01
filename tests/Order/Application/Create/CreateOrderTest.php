@@ -8,6 +8,7 @@ use App\Order\Domain\Calculator\CalculateAmount;
 use App\Order\Domain\Calculator\Operations\DeliveryOrder;
 use App\Order\Domain\Calculator\Operations\NormalOrder;
 use App\Order\Domain\DrinkValueException;
+use App\Order\Domain\OrderRepository;
 use App\Order\Domain\PaymentDeliveryException;
 use App\Order\Domain\PaymentException;
 use App\Order\Domain\Product\Factory\ProductFactory;
@@ -18,13 +19,14 @@ use PHPUnit\Framework\TestCase;
 class CreateOrderTest extends TestCase
 {
     private ProductFactory $productFactory;
+    private OrderRepository $repository;
 
     protected function setUp(): void
     {
         $this->productFactory = $this->createMock(ProductFactory::class);
-
         $this->calculator = new CalculateAmount([new DeliveryOrder(), new NormalOrder()]);
-        $this->handler = new CreateOrderCommandHandler($this->productFactory, $this->calculator);
+        $this->repository = $this->createMock(OrderRepository::class);
+        $this->handler = new CreateOrderCommandHandler($this->productFactory, $this->calculator, $this->repository);
     }
 
     #[Test]
@@ -34,6 +36,10 @@ class CreateOrderTest extends TestCase
             ->expects($this->once())
             ->method('createProduct')
             ->willReturn(new Pizza());
+
+        $this->repository
+            ->expects($this->once())
+            ->method('save');
 
         $command = new CreateOrderCommand('pizza', 14, true, null);
 
@@ -50,6 +56,10 @@ class CreateOrderTest extends TestCase
             ->method('createProduct')
             ->willReturn(new Pizza());
 
+        $this->repository
+            ->expects($this->never())
+            ->method('save');
+
         $command = new CreateOrderCommand('pizza', 10, true, null);
 
         $this->executeHandler($command);
@@ -64,6 +74,10 @@ class CreateOrderTest extends TestCase
             ->expects($this->once())
             ->method('createProduct')
             ->willReturn(new Pizza());
+
+        $this->repository
+            ->expects($this->never())
+            ->method('save');
 
         $command = new CreateOrderCommand('pizza', 10, false, null);
 
@@ -80,18 +94,26 @@ class CreateOrderTest extends TestCase
             ->method('createProduct')
             ->willReturn(new Pizza());
 
+        $this->repository
+            ->expects($this->never())
+            ->method('save');
+
         $command = new CreateOrderCommand('pizza', 10, true, 99);
 
         $this->executeHandler($command);
     }
 
     #[Test]
-    public function it_should_message_when_included_drink_in_order()
+    public function it_should_message_when_included_drink_in_order_is_success()
     {
         $this->productFactory
             ->expects($this->once())
             ->method('createProduct')
             ->willReturn(new Pizza());
+
+        $this->repository
+            ->expects($this->once())
+            ->method('save');
 
         $command = new CreateOrderCommand('pizza', 16, true, 1);
 

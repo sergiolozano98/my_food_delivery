@@ -6,6 +6,7 @@ abstract class Product
 {
     protected string $type;
     protected float $price;
+    protected int $id;
 
     public function type(): string
     {
@@ -15,5 +16,10 @@ abstract class Product
     public function price(): float
     {
         return $this->price;
+    }
+
+    public function id(): int
+    {
+        return $this->id;
     }
 }
