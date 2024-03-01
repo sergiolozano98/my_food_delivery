@@ -11,6 +11,17 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+    _instanceof:
+        App\Shared\Domain\Bus\Command\CommandHandler:
+            tags: [ 'app.command_handler' ]
+
+        App\Shared\Domain\Bus\Query\QueryHandler:
+            tags: [ 'app.query_handler' ]
+
+        App\Order\Domain\Calculator\Operations\Operation:
+            tags: [ 'app.operation' ]
+
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -20,5 +31,19 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Order\Domain\Food\Factory\FoodFactory:
+        arguments:
+            $foods:
+                - '@App\Order\Domain\Food\Pizza'
+                - '@App\Order\Domain\Food\Burger'
+                - '@App\Order\Domain\Food\Sushi'
+
+    App\Order\Domain\Calculator\CalculateAmount:
+        arguments: [ !tagged app.operation ]
+
+    ### Buses
+    App\Shared\Infrastructure\Bus\Command\InMemoryCommandBus:
+        arguments: [ !tagged app.command_handler ]
+
+    App\Shared\Infrastructure\Bus\Query\InMemoryQueryBus:
+        arguments: [ !tagged app.query_handler ]

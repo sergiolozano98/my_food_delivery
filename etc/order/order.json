@@ -1,0 +1,10 @@
+[
+    {
+        "id": "4de221da-dbea-458c-a125-e4e2cab7accb",
+        "food": 2,
+        "drink": 0,
+        "delivery": true,
+        "money": 25.5,
+        "amount": 25.5
+    }
+]

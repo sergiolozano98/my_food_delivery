@@ -2,6 +2,9 @@
 
 namespace App\Command;
 
+use App\Order\Application\Create\CreateOrderCommand;
+use App\Shared\Domain\Bus\Command\CommandBus;
+use App\Shared\Domain\ValueObject\Uuid;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,6 +19,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class OrderCommand extends Command
 {
+
+    public function __construct(private readonly CommandBus $commandBus)
+    {
+        parent::__construct('app:order:register');
+    }
+
     protected function configure(): void
     {
         $this->setHelp('Registers a new order in the system');
@@ -29,47 +38,20 @@ class OrderCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ($input->getArgument('selectedFood') == 'pizza' || $input->getArgument('selectedFood') == 'burger' || $input->getArgument('selectedFood') == 'sushi') {
-            $foodAmount = 0;
+        $foodType = $input->getArgument('selectedFood');
+        $money = $input->getArgument('money');
+        $delivery = $input->getArgument('isDelivery');
+        $drinks = $input->getArgument('drinks');
+        $orderId = Uuid::random()->value();
 
-            if ($input->getArgument('selectedFood') == 'pizza') {
-                $foodAmount = 12.5;
-            } elseif ($input->getArgument('selectedFood') == 'burger') {
-                $foodAmount = 9;
-            } elseif ($input->getArgument('selectedFood') == 'sushi') {
-                $foodAmount = 24;
-            }
-
-            if ($input->getArgument('drinks') < 0 || $input->getArgument('drinks') > 2) {
-                $output->writeln('Number of drinks should be between 0 and 2.');
-                return Command::FAILURE;
-            } else {
-                if ($input->getArgument('isDelivery') == true) {
-                    $totalOrderAmount = $foodAmount + ($input->getArgument('drinks') * 2) + 1.5;
-                    if ($input->getArgument('money') < $totalOrderAmount || $input->getArgument('money') > $totalOrderAmount) {
-                        $output->writeln('Money must be the exact order amount on delivery orders.');
-                        return Command::FAILURE;
-                    }
-                } else {
-                    $totalOrderAmount = $foodAmount + ($input->getArgument('drinks') * 2);
-                    if ($input->getArgument('money') < $totalOrderAmount) {
-                        $output->writeln('Money does not reach the order amount.');
-                        return Command::FAILURE;
-                    }
-                }
-
-                if ($input->getArgument('drinks') > 0) {
-                    $drinksIncludedString = 'with drinks included ';
-                } else {
-                    $drinksIncludedString = '';
-                }
-
-                $output->writeln('Your order '.$drinksIncludedString.'has been registered.');
-                return Command::SUCCESS;
-            }
-        } else {
-            $output->writeln('Selected food must be pizza, burger or sushi.');
+        try {
+            $this->commandBus->dispatch(new CreateOrderCommand($orderId, $foodType, $money, $delivery, $drinks));
+        } catch (\Exception $exception) {
+            $output->writeln($exception->getMessage());
             return Command::FAILURE;
         }
+
+        $output->writeln(sprintf('Your order%s has been registered.', ($drinks > 0) ? ' with drinks included' : ''));
+        return Command::SUCCESS;
     }
 }
