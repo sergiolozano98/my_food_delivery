@@ -11,30 +11,30 @@ use App\Order\Domain\DrinkValueException;
 use App\Order\Domain\OrderRepository;
 use App\Order\Domain\PaymentDeliveryException;
 use App\Order\Domain\PaymentException;
-use App\Order\Domain\Product\Factory\ProductFactory;
-use App\Order\Domain\Product\Pizza;
+use App\Order\Domain\Food\Factory\FoodFactory;
+use App\Order\Domain\Food\Pizza;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class CreateOrderTest extends TestCase
 {
-    private ProductFactory $productFactory;
+    private FoodFactory $foodFactory;
     private OrderRepository $repository;
 
     protected function setUp(): void
     {
-        $this->productFactory = $this->createMock(ProductFactory::class);
+        $this->foodFactory = $this->createMock(FoodFactory::class);
         $this->calculator = new CalculateAmount([new DeliveryOrder(), new NormalOrder()]);
         $this->repository = $this->createMock(OrderRepository::class);
-        $this->handler = new CreateOrderCommandHandler($this->productFactory, $this->calculator, $this->repository);
+        $this->handler = new CreateOrderCommandHandler($this->foodFactory, $this->calculator, $this->repository);
     }
 
     #[Test]
     public function it_should_message_correct_when_order_is_success()
     {
-        $this->productFactory
+        $this->foodFactory
             ->expects($this->once())
-            ->method('createProduct')
+            ->method('createFood')
             ->willReturn(new Pizza());
 
         $this->repository
@@ -51,9 +51,9 @@ class CreateOrderTest extends TestCase
     {
         $this->expectException(PaymentDeliveryException::class);
 
-        $this->productFactory
+        $this->foodFactory
             ->expects($this->once())
-            ->method('createProduct')
+            ->method('createFood')
             ->willReturn(new Pizza());
 
         $this->repository
@@ -70,9 +70,9 @@ class CreateOrderTest extends TestCase
     {
         $this->expectException(PaymentException::class);
 
-        $this->productFactory
+        $this->foodFactory
             ->expects($this->once())
-            ->method('createProduct')
+            ->method('createFood')
             ->willReturn(new Pizza());
 
         $this->repository
@@ -89,9 +89,9 @@ class CreateOrderTest extends TestCase
     {
         $this->expectException(DrinkValueException::class);
 
-        $this->productFactory
+        $this->foodFactory
             ->expects($this->once())
-            ->method('createProduct')
+            ->method('createFood')
             ->willReturn(new Pizza());
 
         $this->repository
@@ -106,9 +106,9 @@ class CreateOrderTest extends TestCase
     #[Test]
     public function it_should_message_when_included_drink_in_order_is_success()
     {
-        $this->productFactory
+        $this->foodFactory
             ->expects($this->once())
-            ->method('createProduct')
+            ->method('createFood')
             ->willReturn(new Pizza());
 
         $this->repository

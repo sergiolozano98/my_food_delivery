@@ -31,12 +31,12 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\Order\Domain\Product\Factory\ProductFactory:
+    App\Order\Domain\Food\Factory\FoodFactory:
         arguments:
-            $products:
-                - '@App\Order\Domain\Product\Pizza'
-                - '@App\Order\Domain\Product\Burger'
-                - '@App\Order\Domain\Product\Sushi'
+            $foods:
+                - '@App\Order\Domain\Food\Pizza'
+                - '@App\Order\Domain\Food\Burger'
+                - '@App\Order\Domain\Food\Sushi'
 
     App\Order\Domain\Calculator\CalculateAmount:
         arguments: [ !tagged app.operation ]

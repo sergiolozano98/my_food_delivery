@@ -7,17 +7,17 @@ use App\Shared\Domain\Bus\Command\Command;
 readonly class CreateOrderCommand implements Command
 {
     public function __construct(
-        private string $productType,
+        private string $foodType,
         private float  $money,
         private bool   $delivery,
-        private ?int    $drink
+        private ?int   $drink
     )
     {
     }
 
-    public function productType(): string
+    public function foodType(): string
     {
-        return $this->productType;
+        return $this->foodType;
     }
 
     public function money(): float

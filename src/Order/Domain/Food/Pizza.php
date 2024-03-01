@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Order\Domain\Product;
+namespace App\Order\Domain\Food;
 
-class Pizza extends Product
+class Pizza extends Food
 {
     const PIZZA_ID = 1;
 

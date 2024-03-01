@@ -37,13 +37,13 @@ class OrderCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $productType = $input->getArgument('selectedFood');
+        $foodType = $input->getArgument('selectedFood');
         $money = $input->getArgument('money');
         $delivery = $input->getArgument('isDelivery');
         $drinks = $input->getArgument('drinks');
 
         try {
-            $this->commandBus->dispatch(new CreateOrderCommand($productType, $money, $delivery, $drinks));
+            $this->commandBus->dispatch(new CreateOrderCommand($foodType, $money, $delivery, $drinks));
         } catch (\Exception $exception) {
             $output->writeln($exception->getMessage());
             return Command::FAILURE;

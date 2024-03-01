@@ -39,7 +39,7 @@ class GetAllDeliveryOrderCommand extends Command
         foreach ($result->orders() as $order) {
             $output->writeln(
                 sprintf(
-                    'Order {id: %s, product: %s, amount: %s, money: %s}',
+                    'Order {id: %s, food_id: %s, amount: %s, money: %s}',
                     $order->id(),
                     $order->foodId(),
                     $order->amount(),

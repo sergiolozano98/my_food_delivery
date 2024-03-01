@@ -15,7 +15,7 @@ class OrderJsonFileRepository implements OrderRepository
 
         $newOrder = [
             'id' => $order->id(),
-            'food' => $order->productId(),
+            'food' => $order->foodId(),
             'drink' => $order->drinks(),
             'delivery' => $order->isDelivery(),
             'money' => $order->money(),

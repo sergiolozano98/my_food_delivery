@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Order\Domain\Product;
+namespace App\Order\Domain\Food;
 
-abstract class Product
+abstract class Food
 {
     protected string $type;
     protected float $price;

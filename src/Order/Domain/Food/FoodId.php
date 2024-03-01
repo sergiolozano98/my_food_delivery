@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Order\Domain\Product;
+namespace App\Order\Domain\Food;
 
-class ProductId
+class FoodId
 {
     public function __construct(protected int $value)
     {
     }
 
-    public static function create(int $value): ProductId
+    public static function create(int $value): FoodId
     {
         return new self($value);
     }

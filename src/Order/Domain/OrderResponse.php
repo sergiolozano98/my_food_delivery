@@ -7,7 +7,7 @@ readonly class OrderResponse
     public function __construct(
         private int    $id,
         private int    $foodId,
-        private int $drink,
+        private ?int $drink,
         private bool   $delivery,
         private float  $money,
         private float  $amount
@@ -23,7 +23,7 @@ readonly class OrderResponse
         return $this->foodId;
     }
 
-    public function drink(): string
+    public function drink(): ?int
     {
         return $this->drink;
     }

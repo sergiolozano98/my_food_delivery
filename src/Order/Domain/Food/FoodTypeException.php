@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Order\Domain;
+namespace App\Order\Domain\Food;
 
-class ProductTypeException extends \Exception
+class FoodTypeException extends \Exception
 {
     public function __construct()
     {

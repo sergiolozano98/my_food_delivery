@@ -2,32 +2,32 @@
 
 namespace App\Order\Domain;
 
-use App\Order\Domain\Product\ProductId;
+use App\Order\Domain\Food\FoodId;
 
 class Order
 {
 
     public function __construct(
-        protected int       $id,
-        protected ProductId $product,
-        protected Money     $money,
-        protected Delivery  $isDelivery,
-        protected Amount    $amount,
-        protected ?Drink    $drinks,
+        protected int      $id,
+        protected FoodId   $foodId,
+        protected Money    $money,
+        protected Delivery $isDelivery,
+        protected Amount   $amount,
+        protected ?Drink   $drinks,
     )
     {
     }
 
-    public static function create(int $id, ProductId $product, Money $money, Delivery $isDelivery, Amount $amount, ?Drink $drinks): Order
+    public static function create(int $id, FoodId $foodId, Money $money, Delivery $isDelivery, Amount $amount, ?Drink $drinks): Order
     {
-        return new self($id, $product, $money, $isDelivery, $amount, $drinks);
+        return new self($id, $foodId, $money, $isDelivery, $amount, $drinks);
     }
 
     public static function fromArray(array $data): Order
     {
         return new self(
             $data['id'],
-            new ProductId($data['food']),
+            new FoodId($data['food']),
             new Money($data['money']),
             new Delivery($data['delivery']),
             new Amount($data['amount']),
@@ -55,9 +55,9 @@ class Order
         return $this->drinks->value();
     }
 
-    public function productId(): int
+    public function foodId(): int
     {
-        return $this->product->value();
+        return $this->foodId->value();
     }
 
     public function amount(): float

@@ -25,7 +25,7 @@ readonly class AllDeliveryOrderSearcher
     {
         return static fn(Order $order): OrderResponse => new OrderResponse(
             $order->id(),
-            $order->productId(),
+            $order->foodId(),
             $order->drinks(),
             $order->isDelivery(),
             $order->money(),
